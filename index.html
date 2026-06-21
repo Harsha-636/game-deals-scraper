@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameDeals — AI-Powered Game Price Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0d0d14;--bg2:#13131f;--surface:#1e1e30;--surface2:#252540;--border:rgba(255,255,255,0.07);--accent:#7c6fff;--accent2:#ff6b6b;--accent3:#ffd93d;--green:#6bffb8;--text:#e8e8f0;--text2:#9999bb;--text3:#5555aa;--font-display:'Syne',sans-serif;--font-body:'Space Grotesk',sans-serif}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+    .accent{color:var(--accent)}
+    header{position:sticky;top:0;z-index:100;background:rgba(13,13,20,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:1.4rem;font-weight:800}
+    .logo-badge{background:var(--accent);color:white;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:4px}
+    .nav{display:flex;align-items:center;gap:8px}
+    .nav a{color:var(--text);text-decoration:none;background:var(--surface2);border:1px solid var(--border);padding:7px 14px;border-radius:8px;font-size:0.85rem;font-weight:500}
+    .hero{padding:80px 0 0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,111,255,0.12) 0%,transparent 70%)}
+    .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding-bottom:60px}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:0.85rem;font-weight:600;background:rgba(124,111,255,0.1);border:1px solid rgba(124,111,255,0.2);padding:6px 14px;border-radius:100px;margin-bottom:20px}
+    h1{font-family:var(--font-display);font-size:3rem;font-weight:800;line-height:1.1;margin-bottom:20px}
+    .hero-sub{color:var(--text2);font-size:1rem;line-height:1.7;max-width:460px;margin-bottom:32px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:white;border:none;padding:12px 22px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:var(--font-body)}
+    .btn-primary:hover{background:#9585ff;transform:translateY(-1px)}
+    .btn-secondary{display:inline-flex;align-items:center;gap:8px;background:var(--surface);color:var(--text);border:1px solid var(--border);padding:12px 22px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:var(--font-body)}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center}
+    .stat-num{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent);margin-bottom:4px}
+    .stat-label{color:var(--text2);font-size:0.8rem}
+    .marquee{border-top:1px solid var(--border);background:var(--bg2);padding:12px 0;overflow:hidden;white-space:nowrap}
+    .marquee-track{display:inline-block;animation:marquee 30s linear infinite;color:var(--text3);font-size:0.85rem}
+    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .section{padding:80px 0}
+    .ai-section{background:var(--bg2)}
+    .section-header{text-align:center;margin-bottom:48px}
+    .section-title{font-family:var(--font-display);font-size:2rem;font-weight:800;margin-bottom:10px}
+    .section-sub{color:var(--text2);font-size:0.95rem;margin-bottom:20px}
+    .overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .overview-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px}
+    .ov-label{color:var(--text3);font-size:0.75rem;font-weight:600;text-transform:uppercase;margin-bottom:12px}
+    .ov-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:6px}
+    .ov-big{font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--accent)}
+    .ov-detail{color:var(--text2);font-size:0.85rem}
+    .ai-placeholder{text-align:center;padding:60px 20px;color:var(--text2)}
+    .ai-placeholder-icon{font-size:4rem;margin-bottom:16px}
+    .ai-result{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+    .ai-headline{grid-column:1/-1;background:linear-gradient(135deg,rgba(124,111,255,0.15),rgba(107,255,184,0.08));border:1px solid rgba(124,111,255,0.25);border-radius:16px;padding:24px;text-align:center;font-size:1.05rem;font-weight:600}
+    .ai-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+    .ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .ai-card.top-pick::before{background:linear-gradient(90deg,var(--accent),#a78fff)}
+    .ai-card.budget-pick::before{background:linear-gradient(90deg,var(--green),#4fc3f7)}
+    .ai-card.hidden-gem::before{background:linear-gradient(90deg,var(--accent3),#ff6b6b)}
+    .ai-card-badge{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;opacity:0.7}
+    .ai-card.top-pick .ai-card-badge{color:var(--accent)}
+    .ai-card.budget-pick .ai-card-badge{color:var(--green)}
+    .ai-card.hidden-gem .ai-card-badge{color:var(--accent3)}
+    .ai-card-title{font-weight:700;font-size:1.1rem;margin-bottom:10px}
+    .ai-card-reason{color:var(--text2);font-size:0.87rem;line-height:1.6;margin-bottom:14px}
+    .ai-summary{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;color:var(--text2);font-size:0.9rem}
+    .filters{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 24px;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;margin-bottom:32px}
+    .filter-group{display:flex;flex-direction:column;gap:6px}
+    .filter-label{color:var(--text3);font-size:0.75rem;font-weight:600;text-transform:uppercase}
+    .filter-select,.filter-input{background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--font-body);font-size:0.9rem;outline:none;min-width:130px}
+    .quick-filters{display:flex;gap:6px}
+    .qf-btn{background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:var(--font-body)}
+    .qf-btn.active,.qf-btn:hover{background:var(--accent);color:white;border-color:var(--accent)}
+    .results-count{color:var(--text3);font-size:0.85rem;margin-left:auto}
+    .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+    .game-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.25s;cursor:pointer}
+    .game-card:hover{border-color:rgba(124,111,255,0.4);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.4)}
+    .game-img-wrap{position:relative;overflow:hidden}
+    .game-img{width:100%;aspect-ratio:16/7;object-fit:cover;display:block;transition:transform 0.3s}
+    .game-card:hover .game-img{transform:scale(1.04)}
+    .game-badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);color:white;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:100px}
+    .game-discount-tag{position:absolute;top:10px;right:10px;background:var(--accent2);color:white;font-size:0.8rem;font-weight:700;padding:4px 10px;border-radius:8px}
+    .game-body{padding:16px}
+    .game-genre-platform{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .game-genre{color:var(--accent);font-size:0.72rem;font-weight:600;text-transform:uppercase}
+    .game-platform{color:var(--text3);font-size:0.72rem}
+    .game-title{font-family:var(--font-display);font-size:1.05rem;font-weight:700;margin-bottom:10px}
+    .game-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .game-rating{display:flex;align-items:center;gap:5px;font-size:0.85rem}
+    .stars{color:var(--accent3);font-size:0.7rem}
+    .game-reviews{color:var(--text3);font-size:0.72rem}
+    .game-pricing{display:flex;align-items:center;gap:10px}
+    .price-original{color:var(--text3);font-size:0.85rem;text-decoration:line-through}
+    .price-sale{font-family:var(--font-display);font-size:1.3rem;font-weight:800;color:var(--green)}
+    .price-savings{margin-left:auto;font-size:0.75rem;color:var(--accent2);font-weight:600;background:rgba(255,107,107,0.1);padding:2px 8px;border-radius:100px}
+    .game-action{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+    .game-action a{display:block;text-align:center;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:0.82rem;font-weight:600;text-decoration:none;transition:all 0.2s}
+    .game-action a:hover{background:var(--accent);border-color:var(--accent);color:white}
+    .loading-shimmer{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:16px;min-height:320px}
+    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+    .ai-loading{text-align:center;padding:40px;color:var(--text2)}
+    .ai-spinner{width:48px;height:48px;border:3px solid var(--surface2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .no-results{text-align:center;padding:60px 20px;color:var(--text2)}
+    .hidden{display:none!important}
+    footer{border-top:1px solid var(--border);background:var(--bg2);padding:40px 0}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+    .footer-logo{font-family:var(--font-display);font-size:1.2rem;font-weight:800}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{color:var(--text2);text-decoration:none;font-size:0.9rem}
+    .footer-note{color:var(--text3);font-size:0.8rem}
+    @media(max-width:900px){.hero-inner{grid-template-columns:1fr}.overview-grid{grid-template-columns:1fr}.ai-result{grid-template-columns:1fr}}
+    @media(max-width:600px){h1{font-size:2rem}.stat-grid{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <div class="logo">
+        <span>🎮</span>
+        <span>Game<span class="accent">Deals</span></span>
+        <span class="logo-badge">AI</span>
+      </div>
+      <nav class="nav">
+        <a href="https://github.com/Harsha-636/game-deals-scraper" target="_blank">⭐ GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <div>
+        <div class="hero-eyebrow">🤖 Powered by AI</div>
+        <h1>Find the Best<br/><span class="accent">Game Deals</span><br/>Right Now</h1>
+        <p class="hero-sub">Real-time game deal dashboard with AI-powered recommendations. Filter by genre, price, and rating.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="loadGames()">⚡ Refresh Deals</button>
+          <button class="btn-secondary" onclick="loadAIPicks()">🤖 Get AI Picks</button>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Active Deals</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-avg">—</div><div class="stat-label">Avg Discount</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-best">—</div><div class="stat-label">Best Discount</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-cheap">—</div><div class="stat-label">Lowest Price</div></div>
+      </div>
+    </div>
+    <div class="marquee"><div class="marquee-track" id="marquee">Loading deals...</div></div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Market Overview</h2>
+        <p class="section-sub">Live snapshot of today's deals</p>
+      </div>
+      <div class="overview-grid" id="overview-grid">
+        <div class="overview-card loading-shimmer"></div>
+        <div class="overview-card loading-shimmer"></div>
+        <div class="overview-card loading-shimmer"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ai-section" id="ai-picks">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">🤖 AI Deal Analysis</h2>
+        <p class="section-sub">Smart recommendations powered by AI</p>
+        <button class="btn-primary" onclick="loadAIPicks()" id="ai-btn">Analyze Deals with AI</button>
+      </div>
+      <div id="ai-container">
+        <div class="ai-placeholder"><div class="ai-placeholder-icon">🤖</div><p>Click the button above to get AI-powered deal recommendations</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="deals">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">All Deals</h2>
+        <p class="section-sub">Browse, filter, and sort every available deal</p>
+      </div>
+      <div class="filters">
+        <div class="filter-group">
+          <label class="filter-label">Genre</label>
+          <select class="filter-select" id="genre-filter" onchange="loadGames()">
+            <option value="all">All Genres</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Max Price ($)</label>
+          <input type="number" id="price-filter" class="filter-input" placeholder="Any" min="0" max="100" onchange="loadGames()" style="width:100px"/>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Sort By</label>
+          <select class="filter-select" id="sort-filter" onchange="loadGames()">
+            <option value="discount">Best Discount</option>
+            <option value="price">Lowest Price</option>
+            <option value="rating">Highest Rated</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Quick Filters</label>
+          <div class="quick-filters">
+            <button class="qf-btn active" onclick="quickFilter(this,'all')">All</button>
+            <button class="qf-btn" onclick="quickFilter(this,'75')">75%+ Off</button>
+            <button class="qf-btn" onclick="quickFilter(this,'under5')">Under $5</button>
+          </div>
+        </div>
+        <span class="results-count" id="results-count">Loading...</span>
+      </div>
+      <div class="games-grid" id="games-grid">
+        <div class="loading-shimmer"></div>
+        <div class="loading-shimmer"></div>
+        <div class="loading-shimmer"></div>
+        <div class="loading-shimmer"></div>
+        <div class="loading-shimmer"></div>
+        <div class="loading-shimmer"></div>
+      </div>
+      <div class="no-results hidden" id="no-results"><p>No deals match your filters.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-logo">🎮 Game<span class="accent">Deals</span></div>
+      <div class="footer-links">
+        <a href="https://github.com/Harsha-636/game-deals-scraper" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/harsha-avula/" target="_blank">LinkedIn</a>
+      </div>
+      <div class="footer-note">Built by <strong>Sai Harsha Vardhan Reddy Avula</strong> · Python + Flask + AI</div>
+    </div>
+  </footer>
+
+  <script>
+    let allGames=[];
+    let qFilter='all';
+    document.addEventListener('DOMContentLoaded',()=>{loadStats();loadGenres();loadGames()});
+    async function loadGames(){
+      const genre=document.getElementById('genre-filter').value;
+      const maxPrice=document.getElementById('price-filter').value;
+      const sortBy=document.getElementById('sort-filter').value;
+      let url=`/api/games?sort_by=${sortBy}`;
+      if(genre!=='all')url+=`&genre=${encodeURIComponent(genre)}`;
+      if(maxPrice)url+=`&max_price=${maxPrice}`;
+      showShimmer();
+      try{const res=await fetch(url);const data=await res.json();allGames=data.games;applyQFilter(allGames)}
+      catch(e){document.getElementById('games-grid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text2)">Failed to load deals.</div>'}
+    }
+    async function loadStats(){
+      try{const res=await fetch('/api/stats');const d=await res.json();
+        document.getElementById('stat-total').textContent=d.total_games;
+        document.getElementById('stat-avg').textContent=d.avg_discount+'%';
+        document.getElementById('stat-best').textContent=d.best_deal.discount_pct+'%';
+        document.getElementById('stat-cheap').textContent='$'+d.cheapest.sale_price;
+        document.getElementById('overview-grid').innerHTML=`
+          <div class="overview-card"><div class="ov-label">🔥 Best Discount</div><div class="ov-title">${d.best_deal.title}</div><div class="ov-big">${d.best_deal.discount_pct}% off</div><div class="ov-detail">$${d.best_deal.sale_price} from $${d.best_deal.original_price}</div></div>
+          <div class="overview-card"><div class="ov-label">💸 Cheapest</div><div class="ov-title">${d.cheapest.title}</div><div class="ov-big">$${d.cheapest.sale_price}</div><div class="ov-detail">${d.cheapest.discount_pct}% off</div></div>
+          <div class="overview-card"><div class="ov-label">📊 Overview</div><div class="ov-big">${d.avg_discount}%</div><div class="ov-detail">Average discount across ${d.total_games} deals</div></div>`
+      }catch(e){}
+    }
+    async function loadGenres(){
+      try{const res=await fetch('/api/genres');const d=await res.json();
+        const sel=document.getElementById('genre-filter');
+        d.genres.forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g;sel.appendChild(o)})}
+      catch(e){}
+    }
+    async function loadAIPicks(){
+      const btn=document.getElementById('ai-btn');
+      btn.disabled=true;btn.textContent='Analyzing...';
+      document.getElementById('ai-container').innerHTML='<div class="ai-loading"><div class="ai-spinner"></div><p>Analyzing deals...</p></div>';
+      try{const res=await fetch('/api/ai-picks');const d=await res.json();renderAI(d.analysis)}
+      catch(e){document.getElementById('ai-container').innerHTML='<div class="ai-placeholder"><p>Analysis unavailable.</p></div>'}
+      finally{btn.disabled=false;btn.textContent='Refresh AI Analysis'}
+    }
+    function renderAI(a){
+      document.getElementById('ai-container').innerHTML=`
+        <div class="ai-result">
+          <div class="ai-headline">🤖 ${esc(a.headline)}</div>
+          <div class="ai-card top-pick"><div class="ai-card-badge">🏆 Top Pick</div><div class="ai-card-title">${esc(a.top_pick.title)}</div><div class="ai-card-reason">${esc(a.top_pick.reason)}</div></div>
+          <div class="ai-card budget-pick"><div class="ai-card-badge">💚 Budget Pick</div><div class="ai-card-title">${esc(a.budget_pick.title)}</div><div class="ai-card-reason">${esc(a.budget_pick.reason)}</div></div>
+          <div class="ai-card hidden-gem"><div class="ai-card-badge">💎 Hidden Gem</div><div class="ai-card-title">${esc(a.hidde
