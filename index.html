@@ -277,4 +277,26 @@
           <div class="ai-headline">🤖 ${esc(a.headline)}</div>
           <div class="ai-card top-pick"><div class="ai-card-badge">🏆 Top Pick</div><div class="ai-card-title">${esc(a.top_pick.title)}</div><div class="ai-card-reason">${esc(a.top_pick.reason)}</div></div>
           <div class="ai-card budget-pick"><div class="ai-card-badge">💚 Budget Pick</div><div class="ai-card-title">${esc(a.budget_pick.title)}</div><div class="ai-card-reason">${esc(a.budget_pick.reason)}</div></div>
-          <div class="ai-card hidden-gem"><div class="ai-card-badge">💎 Hidden Gem</div><div class="ai-card-title">${esc(a.hidde
+          <div class="ai-card hidden-gem"><div class="ai-card-badge">💎 Hidden Gem</div><div class="ai-card-title">${esc(a.hidden_gem.title)}</div><div class="ai-card-reason">${esc(a.hidden_gem.reason)}</div></div>
+          <div class="ai-summary">📊 ${esc(a.market_summary)}</div>
+        </div>`
+    }
+    function applyQFilter(games){
+      if(qFilter==='75')renderGames(games.filter(g=>g.discount_pct>=75));
+      else if(qFilter==='under5')renderGames(games.filter(g=>g.sale_price<5));
+      else renderGames(games);
+    }
+    function quickFilter(btn,type){
+      document.querySelectorAll('.qf-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');qFilter=type;applyQFilter(allGames);
+    }
+    function showShimmer(){
+      document.getElementById('games-grid').innerHTML=Array(6).fill('<div class="loading-shimmer"></div>').join('');
+      document.getElementById('no-results').classList.add('hidden');
+      document.getElementById('results-count').textContent='Loading...';
+    }
+    function stars(r){const f=Math.round(r/2);return'★'.repeat(f)+'☆'.repeat(5-f)}
+    function esc(s){const d=document.createElement('div');d.appendChild(document.createTextNode(String(s)));return d.innerHTML}
+  </script>
+</body>
+</html>
