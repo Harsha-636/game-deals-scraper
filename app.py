@@ -48,7 +48,7 @@ def get_ai_analysis(games):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return open('index.html').read()
 
 @app.route('/api/games')
 def api_games():
